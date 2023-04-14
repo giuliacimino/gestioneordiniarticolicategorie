@@ -8,29 +8,30 @@ import it.prova.gestioneordiniarticolicategorie.dao.ordine.OrdineDAO;
 import it.prova.gestioneordiniarticolicategorie.dao.ordine.OrdineDAOImpl;
 
 public class MyDAOFactory {
-	private static OrdineDAO ordineDaoInstance = null;
-	private static ArticoloDAO articoloDaoInstance = null;
-	private static CategoriaDAO categoriaDaoInstance= null;
-
-	public static OrdineDAO getordineDaoInstance() {
-		if (ordineDaoInstance == null)
-			ordineDaoInstance = new OrdineDAOImpl();
-
-		return ordineDaoInstance;
+private static OrdineDAO ordineDAOInstance = null;
+	
+	private static ArticoloDAO articoloDAOInstance = null;
+	
+	private static CategoriaDAO categoriaDAOInstance = null;
+	
+	public static OrdineDAO getOrdineDAOInstance() {
+		if (ordineDAOInstance == null) {
+			ordineDAOInstance = new OrdineDAOImpl();
+		}
+		return ordineDAOInstance;
 	}
 
-	public static ArticoloDAO geArticoloDaoInstance() {
-		if (articoloDaoInstance == null)
-			articoloDaoInstance = new ArticoloDAOImpl();
-
-		return articoloDaoInstance;
+	public static ArticoloDAO getArticoloDAOInstance() {
+		if (articoloDAOInstance == null) {
+			articoloDAOInstance = new ArticoloDAOImpl();
+		}
+		return articoloDAOInstance;
 	}
 	
-	public static CategoriaDAO getCategoriaDaoInstance() {
-		if (categoriaDaoInstance==null)
-			categoriaDaoInstance = new CategoriaDAOImpl();
-		
-		return categoriaDaoInstance;
+	public static CategoriaDAO getCategoriaDAOInstance() {
+		if (categoriaDAOInstance == null) {
+			categoriaDAOInstance = new CategoriaDAOImpl();
+		}
+		return categoriaDAOInstance;
 	}
-
 }

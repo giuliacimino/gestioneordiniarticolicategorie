@@ -1,29 +1,130 @@
 package it.prova.gestioneordiniarticolicategorie.service;
 
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
 import it.prova.gestioneordiniarticolicategorie.categoria.CategoriaDAO;
+import it.prova.gestioneordiniarticolicategorie.dao.EntityManagerUtil;
 import it.prova.gestioneordiniarticolicategorie.dao.articolo.ArticoloDAO;
 import it.prova.gestioneordiniarticolicategorie.dao.ordine.OrdineDAO;
+import it.prova.gestioneordiniarticolicategorie.model.Categoria;
 
 public class CategoriaServiceImpl implements CategoriaService{
 	
-	private OrdineDAO ordineDAO;
-	private ArticoloDAO articoloDAO;
 	private CategoriaDAO categoriaDAO;
 
-	@Override
-	public void setOrdineDao(OrdineDAO ordineDAO) {
-		this.ordineDAO = ordineDAO;
-	}
-
-	@Override
-	public void setArticoloDao(ArticoloDAO articoloDAO) {
-		this.articoloDAO = articoloDAO;
-
-	}
+	
 	
 	@Override
-	public void setCategoriaDao (CategoriaDAO categoriaDAo) {
+	public void setCategoriaDAO(CategoriaDAO categoriaDAO) {
 		this.categoriaDAO=categoriaDAO;
+	}
+
+	@Override
+	public List<Categoria> listAllCategorie() throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+
+			// injection
+			categoriaDAO.setEntityManager(entityManager);
+
+			return categoriaDAO.list();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+	}
+
+	@Override
+	public Categoria caricaSingoloElemento(Long id) throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+
+		try {
+			// uso l'injection per il dao
+			categoriaDAO.setEntityManager(entityManager);
+
+			// eseguo quello che realmente devo fare
+			return categoriaDAO.get(id);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+	}
+
+	@Override
+	public void inserisciNuovo(Categoria categoriaInstance) throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+
+		try {
+			// questo è come il MyConnection.getConnection()
+			entityManager.getTransaction().begin();
+
+			// uso l'injection per il dao
+			categoriaDAO.setEntityManager(entityManager);
+
+			// eseguo quello che realmente devo fare
+			categoriaDAO.insert(categoriaInstance);
+
+			entityManager.getTransaction().commit();
+		} catch (Exception e) {
+			entityManager.getTransaction().rollback();
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+		
+	}
+
+	@Override
+	public Categoria cercaPerDescrizione(String descrizione) throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+
+		try {
+			// uso l'injection per il dao
+			categoriaDAO.setEntityManager(entityManager);
+
+			// eseguo quello che realmente devo fare
+			return categoriaDAO.findByDescrizione(descrizione);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+	}
+
+	@Override
+	public void aggiorna(Categoria categoriaInstance) throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+
+		try {
+			// questo è come il MyConnection.getConnection()
+			entityManager.getTransaction().begin();
+
+			// uso l'injection per il dao
+			categoriaDAO.setEntityManager(entityManager);
+
+			// eseguo quello che realmente devo fare
+			categoriaDAO.update(categoriaInstance);
+
+			entityManager.getTransaction().commit();
+		} catch (Exception e) {
+			entityManager.getTransaction().rollback();
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+		
 	}
 
 
