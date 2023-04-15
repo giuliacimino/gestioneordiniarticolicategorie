@@ -19,6 +19,10 @@ public interface CategoriaService {
 	public Categoria cercaPerDescrizione (String descrizione) throws Exception;
 	
 	public void aggiorna (Categoria categoriaInstance) throws Exception;
+	
+	public void aggiungiArticoloACategoriaEsistente (Categoria categoriaEsistente, Articolo articoloInstance) throws Exception;
+	
+	public Categoria caricaElementoSingoloConArticoli (Long id) throws Exception;
 
 
 	// per injection

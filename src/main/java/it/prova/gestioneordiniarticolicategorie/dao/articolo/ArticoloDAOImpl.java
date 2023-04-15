@@ -3,8 +3,10 @@ package it.prova.gestioneordiniarticolicategorie.dao.articolo;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import it.prova.gestioneordiniarticolicategorie.model.Articolo;
+import it.prova.gestioneordiniarticolicategorie.model.Categoria;
 
 public class ArticoloDAOImpl implements ArticoloDAO{
 	
@@ -57,6 +59,14 @@ private EntityManager entityManager;
 		}
 		entityManager.remove(entityManager.merge(input));
 		
+	}
+
+
+	@Override
+	public Articolo findByIdFetchingCategorie(Long id) throws Exception {
+		TypedQuery<Articolo> query = entityManager.createQuery("select a FROM Articolo a left join fetch a.categorie c where c.id = :idArticolo", Articolo.class);
+		query.setParameter("idArticolo", id);
+		return query.getResultList().stream().findFirst().orElse(null);
 	}
 
 }

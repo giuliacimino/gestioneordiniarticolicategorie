@@ -8,17 +8,16 @@ import it.prova.gestioneordiniarticolicategorie.categoria.CategoriaDAO;
 import it.prova.gestioneordiniarticolicategorie.dao.EntityManagerUtil;
 import it.prova.gestioneordiniarticolicategorie.dao.articolo.ArticoloDAO;
 import it.prova.gestioneordiniarticolicategorie.dao.ordine.OrdineDAO;
+import it.prova.gestioneordiniarticolicategorie.model.Articolo;
 import it.prova.gestioneordiniarticolicategorie.model.Categoria;
 
-public class CategoriaServiceImpl implements CategoriaService{
-	
+public class CategoriaServiceImpl implements CategoriaService {
+
 	private CategoriaDAO categoriaDAO;
 
-	
-	
 	@Override
 	public void setCategoriaDAO(CategoriaDAO categoriaDAO) {
-		this.categoriaDAO=categoriaDAO;
+		this.categoriaDAO = categoriaDAO;
 	}
 
 	@Override
@@ -80,7 +79,7 @@ public class CategoriaServiceImpl implements CategoriaService{
 		} finally {
 			EntityManagerUtil.closeEntityManager(entityManager);
 		}
-		
+
 	}
 
 	@Override
@@ -124,8 +123,52 @@ public class CategoriaServiceImpl implements CategoriaService{
 		} finally {
 			EntityManagerUtil.closeEntityManager(entityManager);
 		}
-		
+
 	}
 
+	@Override
+	public void aggiungiArticoloACategoriaEsistente(Categoria categoriaEsistente, Articolo articoloInstance)
+			throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+
+		try {
+			entityManager.getTransaction().begin();
+
+			// uso l'injection per il dao
+			categoriaDAO.setEntityManager(entityManager);
+
+			categoriaEsistente = entityManager.merge(categoriaEsistente);
+			articoloInstance = entityManager.merge(articoloInstance);
+
+			categoriaEsistente.getArticoli().add(articoloInstance);
+
+			entityManager.getTransaction().commit();
+		} catch (Exception e) {
+			entityManager.getTransaction().rollback();
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+
+	}
+
+	@Override
+	public Categoria caricaElementoSingoloConArticoli(Long id) throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+
+			// injection
+			categoriaDAO.setEntityManager(entityManager);
+
+			return categoriaDAO.findByIdFetchingArticoli(id);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+	}
 
 }

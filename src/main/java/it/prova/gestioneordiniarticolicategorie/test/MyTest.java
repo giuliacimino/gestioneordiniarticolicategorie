@@ -44,9 +44,13 @@ public class MyTest {
 //			testAggiornaCategoria(categoriaServiceInstance);
 //			System.out.println("in tabella Categoria sono presenti "+ categoriaServiceInstance.listAllCategorie().size()+ " elementi.");
 			
-			testRimuoviArticoloCollegatoAOrdine(articoloServiceInstance, ordineServiceInstance);
+//			testRimuoviArticoloCollegatoAOrdine(articoloServiceInstance, ordineServiceInstance);
+//			System.out.println("in tabella Articolo sono presenti "+articoloServiceInstance.listAll().size() +" elementi.");
+			
+			testAggiungiArticoloACategoria(categoriaServiceInstance, articoloServiceInstance, ordineServiceInstance);
 			System.out.println("in tabella Articolo sono presenti "+articoloServiceInstance.listAll().size() +" elementi.");
 
+			
 			
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -186,7 +190,52 @@ public class MyTest {
 		}
 		System.out.println(".......testRimuoviArticolo fine.......");
 
-	}		
+	}
+	
+	//
+	private static void testAggiungiArticoloACategoria (CategoriaService categoriaServiceInstance, ArticoloService articoloServiceInstance, OrdineService ordineServiceInstance) throws Exception{
+		System.out.println(".......aggiungiArticoloACategoria inizio.......");
+		List<Categoria> listaCategorie= categoriaServiceInstance.listAllCategorie();
+		if (listaCategorie.size()<1) {
+			throw new RuntimeException("errore: non sono presenti categorie sul db.");
+		}
+		List<Articolo> listaArticoli= articoloServiceInstance.listAll();
+		if (listaArticoli.size()<1) {
+			throw new RuntimeException("errore: non sono presenti articoli sul db.");
+		}
+		
+		Categoria categoriaEsistente= categoriaServiceInstance.cercaPerDescrizione("abbigliamento");
+		if (categoriaEsistente==null) {
+			throw new RuntimeException("errore: non è presente alcuna categoria con la decrizione fornita.");
+		}
+		
+		Ordine nuovoOrdine = new Ordine("Sofia Sofi", "Via Parma 10", LocalDate.of(2022, 6, 14),
+				LocalDate.of(2022, 10, 20));
+		ordineServiceInstance.inserisciNuovo(nuovoOrdine);
+		if (nuovoOrdine.getId() == null) {
+			throw new RuntimeException("errore: Ordine non inserito.");
+		}
+		Articolo articoloDaAggiungereACategoria= new Articolo("jeans", "3282", 70, LocalDate.of(2022, 12, 07));
+		articoloDaAggiungereACategoria.setOrdine(nuovoOrdine);
+		
+		articoloServiceInstance.inserisciNuovo(articoloDaAggiungereACategoria);
+		if (articoloDaAggiungereACategoria.getId()==null) {
+			throw new RuntimeException("errore: non è stato inserito l'articolo.");
+		}
+		
+	
+		categoriaServiceInstance.aggiungiArticoloACategoriaEsistente(categoriaEsistente, articoloDaAggiungereACategoria);
+		
+		Categoria categoriaReloaded = categoriaServiceInstance.caricaElementoSingoloConArticoli(categoriaEsistente.getId());
+		if (categoriaReloaded.getArticoli().isEmpty()) {
+			throw new RuntimeException("testAssociaArticoloECategoria FALLITO: articolo non associato a categoria");
+		}
+
+		System.out.println(".......aggiungiArticoloACategoria fine.......");
+
+
+	}
+	
 		
 		
 
