@@ -14,6 +14,7 @@ import it.prova.gestioneordiniarticolicategorie.model.Categoria;
 public class ArticoloServiceImpl implements ArticoloService {
 	
 	private ArticoloDAO articoloDAO;
+	private CategoriaDAO categoriaDAO;
 
 
 
@@ -22,6 +23,14 @@ public class ArticoloServiceImpl implements ArticoloService {
 		this.articoloDAO = articoloDAO;
 
 	}
+	
+	@Override
+	public void setCategoriaDAO(CategoriaDAO categoriaDAO) {
+		this.categoriaDAO=categoriaDAO;
+		
+	}
+	
+	
 	
 
 	@Override
@@ -183,6 +192,64 @@ public class ArticoloServiceImpl implements ArticoloService {
 		}
 		
 	}
+
+
+	@Override
+	public void rimuoviCategoriaDaArticolo(Long idArticolo, Long idCategoria) throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+
+		try {
+			// questo è come il MyConnection.getConnection()
+			entityManager.getTransaction().begin();
+
+			// uso l'injection per il dao
+			articoloDAO.setEntityManager(entityManager);
+			categoriaDAO.setEntityManager(entityManager);
+
+			Articolo articoloEsistente = articoloDAO.findByIdFetchingCategorie(idArticolo);
+			Categoria categoriaInstance = categoriaDAO.get(idCategoria);
+
+			articoloEsistente.getCategorie().remove(categoriaInstance);
+	
+			entityManager.getTransaction().commit();
+		} catch (Exception e) {
+			entityManager.getTransaction().rollback();
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+		
+	}
+
+	@Override
+	public void RimuoviArticoloEScollegaCategorie(Long idArticolo) throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+
+			entityManager.getTransaction().begin();
+			
+			// injection
+			articoloDAO.setEntityManager(entityManager);
+
+			articoloDAO.deleteArticoloEScollegaCategorie(idArticolo);
+
+			entityManager.getTransaction().commit();
+		} catch (Exception e) {
+			entityManager.getTransaction().rollback();
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+		
+		
+	}
+
+
+
+
+	
 	
 
 	

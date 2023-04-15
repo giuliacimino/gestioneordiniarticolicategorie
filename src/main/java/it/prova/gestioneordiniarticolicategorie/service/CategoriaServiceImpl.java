@@ -171,4 +171,27 @@ public class CategoriaServiceImpl implements CategoriaService {
 		}
 	}
 
+	@Override
+	public void RimuoviCategoriaEScollegaArticoli(Long idCategoria) throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+
+			entityManager.getTransaction().begin();
+
+			// injection
+			categoriaDAO.setEntityManager(entityManager);
+
+			categoriaDAO.DeleteCategoriaEScollegaArticoli(idCategoria);
+
+			entityManager.getTransaction().commit();
+		} catch (Exception e) {
+			entityManager.getTransaction().rollback();
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+		
+	}
+
 }

@@ -72,6 +72,16 @@ private EntityManager entityManager;
 		query.setParameter(1, id);
 		return query.getResultList().stream().findFirst().orElse(null);
 	}
+
+
+	@Override
+	public void DeleteCategoriaEScollegaArticoli(Long idCategoria) throws Exception {
+		entityManager.createNativeQuery("delete from articolo_categoria a where a.categoria_id = ?1")
+		.setParameter(1, idCategoria).executeUpdate();
+entityManager.createNativeQuery("delete from Categoria c where c.id = ?1").setParameter(1, idCategoria)
+		.executeUpdate();
+
+	}
 	
 	
 

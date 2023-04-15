@@ -112,4 +112,22 @@ public class OrdineServiceImpl implements OrdineService{
 		
 	}
 
+	@Override
+	public Ordine ordinePiuRecentePerCategoria(Long idCategoria) throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+
+			// injection
+			ordineDAO.setEntityManager(entityManager);
+
+			return ordineDAO.getRecentOrdineByCategoria(idCategoria);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+	}
+
 }

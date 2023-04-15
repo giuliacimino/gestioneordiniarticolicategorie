@@ -3,6 +3,7 @@ package it.prova.gestioneordiniarticolicategorie.dao.ordine;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import it.prova.gestioneordiniarticolicategorie.model.Ordine;
 
@@ -55,6 +56,15 @@ public class OrdineDAOImpl implements OrdineDAO{
 	public void delete(Ordine o) throws Exception {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+	@Override
+	public Ordine getRecentOrdineByCategoria(Long idCategoria) throws Exception {
+		TypedQuery<Ordine> query = entityManager.createQuery(
+				"select o from Ordine o join o.articoli a join a.categorie c where c.id = ?1 order by o.dataSpedizione desc",
+				Ordine.class).setParameter(1, idCategoria);
+		return query.getResultStream().findFirst().orElse(null);
 	}
 	
 

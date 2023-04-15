@@ -69,4 +69,13 @@ private EntityManager entityManager;
 		return query.getResultList().stream().findFirst().orElse(null);
 	}
 
+
+	@Override
+	public void deleteArticoloEScollegaCategorie(Long idArticolo) throws Exception {
+		entityManager.createNativeQuery("delete from articolo_categoria a where a.articolo_id = ?1").setParameter(1, idArticolo).executeUpdate();
+		entityManager.createNativeQuery("delete from articolo a where a.id = ?1").setParameter(1, idArticolo)
+		.executeUpdate();
+
+	}
+
 }

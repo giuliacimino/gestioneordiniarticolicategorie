@@ -23,6 +23,10 @@ public interface ArticoloService {
 	public Articolo caricaElementoSingoloConCategorie(Long id) throws Exception;
 	
 	public void aggiungiCategoriaAArticoloEsistente(Articolo articoloEsistente, Categoria categoriaInstance) throws Exception;
+	
+	public void rimuoviCategoriaDaArticolo(Long idArticolo, Long idCategoria) throws Exception;
+	
+	public void RimuoviArticoloEScollegaCategorie (Long idArticolo) throws Exception;
 
 
 
@@ -30,5 +34,6 @@ public interface ArticoloService {
 	
 	//per injection
 		public void setArticoloDAO (ArticoloDAO articoloDAO);
+		public void setCategoriaDAO (CategoriaDAO categoriaDAO);
 
 }

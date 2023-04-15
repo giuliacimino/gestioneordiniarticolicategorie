@@ -23,6 +23,9 @@ public interface CategoriaService {
 	public void aggiungiArticoloACategoriaEsistente (Categoria categoriaEsistente, Articolo articoloInstance) throws Exception;
 	
 	public Categoria caricaElementoSingoloConArticoli (Long id) throws Exception;
+	
+	public void RimuoviCategoriaEScollegaArticoli (Long idCategoria) throws Exception;
+
 
 
 	// per injection

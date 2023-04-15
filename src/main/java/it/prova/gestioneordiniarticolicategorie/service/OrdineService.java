@@ -17,6 +17,9 @@ public interface OrdineService {
 	
 	public void aggiorna(Ordine ordineInstance) throws Exception;
 	
+	public Ordine ordinePiuRecentePerCategoria (Long idCategoria) throws Exception;
+
+	
 	
 	
 	//per injection
