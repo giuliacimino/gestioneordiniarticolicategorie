@@ -47,10 +47,12 @@ public class MyTest {
 //			testRimuoviArticoloCollegatoAOrdine(articoloServiceInstance, ordineServiceInstance);
 //			System.out.println("in tabella Articolo sono presenti "+articoloServiceInstance.listAll().size() +" elementi.");
 			
-			testAggiungiArticoloACategoria(categoriaServiceInstance, articoloServiceInstance, ordineServiceInstance);
+//			testAggiungiArticoloACategoria(categoriaServiceInstance, articoloServiceInstance, ordineServiceInstance);
+//			System.out.println("in tabella Articolo sono presenti "+articoloServiceInstance.listAll().size() +" elementi.");
+
+			testAggiungiCategoriaAArticolo(articoloServiceInstance, ordineServiceInstance, categoriaServiceInstance);
 			System.out.println("in tabella Articolo sono presenti "+articoloServiceInstance.listAll().size() +" elementi.");
 
-			
 			
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -233,6 +235,41 @@ public class MyTest {
 
 		System.out.println(".......aggiungiArticoloACategoria fine.......");
 
+	}
+	
+	//
+	private static void testAggiungiCategoriaAArticolo (ArticoloService articoloServiceInstance, OrdineService ordineServiceInstance, CategoriaService categoriaServiceInstance) throws Exception{
+		System.out.println(".......testAggiungiCategoriaAArticolo inizio.......");
+		List<Articolo> listaArticoli= articoloServiceInstance.listAll();
+		if (listaArticoli.size()<1) {
+			throw new RuntimeException("errore: non sono presenti articoli sul db.");
+		}
+		Ordine nuovoOrdine= new Ordine("giulia gatta", "via milano 2", LocalDate.of(2022, 12, 10), LocalDate.of(2022, 12, 11));
+		ordineServiceInstance.inserisciNuovo(nuovoOrdine);
+		Articolo nuovoArticolo= new Articolo ("padella", "4525", 50, LocalDate.of(2023, 2, 9));
+		nuovoArticolo.setOrdine(nuovoOrdine);
+		articoloServiceInstance.inserisciNuovo(nuovoArticolo);
+		if (nuovoArticolo.getId() == null) {
+			throw new RuntimeException("errore: non è stato inserito l'articolo");
+		}
+		
+		List<Categoria> listaCategorie= categoriaServiceInstance.listAllCategorie();
+		if (listaArticoli.size()<1) {
+			throw new RuntimeException("errore: non sono presenti categorie sul db.");
+		}
+		
+		Categoria categoriaDaAggiungere= listaCategorie.get(0);
+		articoloServiceInstance.aggiungiCategoriaAArticoloEsistente(nuovoArticolo, categoriaDaAggiungere);
+		
+		Articolo articoloReloaded= articoloServiceInstance.caricaElementoSingoloConCategorie(nuovoArticolo.getId());
+		if (articoloReloaded.getCategorie().isEmpty()) {
+			throw new RuntimeException("errore: non è stata collegata la categoria all'articolo.");
+		}
+		System.out.println(".......testAggiungiCategoriaAArticolo fine.......");
+
+		
+		
+		
 
 	}
 	

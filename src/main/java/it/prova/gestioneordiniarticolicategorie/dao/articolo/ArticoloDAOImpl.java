@@ -64,8 +64,8 @@ private EntityManager entityManager;
 
 	@Override
 	public Articolo findByIdFetchingCategorie(Long id) throws Exception {
-		TypedQuery<Articolo> query = entityManager.createQuery("select a FROM Articolo a left join fetch a.categorie c where c.id = :idArticolo", Articolo.class);
-		query.setParameter("idArticolo", id);
+		TypedQuery<Articolo> query = entityManager.createQuery("select a FROM Articolo a join fetch a.categorie c where a.id = ?1", Articolo.class);
+		query.setParameter(1, id);
 		return query.getResultList().stream().findFirst().orElse(null);
 	}
 

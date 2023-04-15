@@ -21,6 +21,9 @@ public interface ArticoloService {
 	public void rimuovi(Long idArticolo) throws Exception;
 	
 	public Articolo caricaElementoSingoloConCategorie(Long id) throws Exception;
+	
+	public void aggiungiCategoriaAArticoloEsistente(Articolo articoloEsistente, Categoria categoriaInstance) throws Exception;
+
 
 
 	
