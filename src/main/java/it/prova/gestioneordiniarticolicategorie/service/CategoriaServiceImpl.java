@@ -172,7 +172,7 @@ public class CategoriaServiceImpl implements CategoriaService {
 	}
 
 	@Override
-	public void RimuoviCategoriaEScollegaArticoli(Long idCategoria) throws Exception {
+	public void rimuoviCategoriaEScollegaArticoli(Long idCategoria) throws Exception {
 		EntityManager entityManager = EntityManagerUtil.getEntityManager();
 		try {
 
@@ -181,7 +181,7 @@ public class CategoriaServiceImpl implements CategoriaService {
 			// injection
 			categoriaDAO.setEntityManager(entityManager);
 
-			categoriaDAO.DeleteCategoriaEScollegaArticoli(idCategoria);
+			categoriaDAO.deleteCategoriaEScollegaArticoli(idCategoria);
 
 			entityManager.getTransaction().commit();
 		} catch (Exception e) {
@@ -202,7 +202,7 @@ public class CategoriaServiceImpl implements CategoriaService {
 			// injection
 			categoriaDAO.setEntityManager(entityManager);
 
-			return categoriaDAO.FindAllCategorieByArticoliInAOrdine(idOrdine);
+			return categoriaDAO.findAllCategorieByArticoliInAOrdine(idOrdine);
 
 		} catch (Exception e) {
 			e.printStackTrace();

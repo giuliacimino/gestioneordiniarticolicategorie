@@ -108,4 +108,12 @@ private EntityManager entityManager;
 		return query.getResultList();
 	}
 
+
+	@Override
+	public List<Articolo> findAllByOrdine(Long idOrdine) throws Exception {
+		TypedQuery<Articolo> query = entityManager.createQuery("from Articolo where ordine_id = ?1", Articolo.class);
+		query.setParameter(1, idOrdine);
+		return query.getResultList();
+	}
+
 }

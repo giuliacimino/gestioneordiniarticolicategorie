@@ -8,6 +8,7 @@ import it.prova.gestioneordiniarticolicategorie.categoria.CategoriaDAO;
 import it.prova.gestioneordiniarticolicategorie.dao.EntityManagerUtil;
 import it.prova.gestioneordiniarticolicategorie.dao.articolo.ArticoloDAO;
 import it.prova.gestioneordiniarticolicategorie.dao.ordine.OrdineDAO;
+import it.prova.gestioneordiniarticolicategorie.exception.OrdineConArticoliException;
 import it.prova.gestioneordiniarticolicategorie.model.Articolo;
 import it.prova.gestioneordiniarticolicategorie.model.Ordine;
 
@@ -164,6 +165,34 @@ public class OrdineServiceImpl implements OrdineService{
 		} finally {
 			EntityManagerUtil.closeEntityManager(entityManager);
 		}
+	}
+
+	@Override
+	public void rimuoviOrdine(Long idOrdine) throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+
+			entityManager.getTransaction().begin();
+
+			// injection
+			ordineDAO.setEntityManager(entityManager);
+			articoloDAO.setEntityManager(entityManager);
+			
+			if(articoloDAO.findAllByOrdine(idOrdine).size()>0) {
+				throw new OrdineConArticoliException("errore: impossibile rimuovere ordine con articoli associati");
+			}
+
+			ordineDAO.delete(ordineDAO.get(idOrdine));
+
+			entityManager.getTransaction().commit();
+		} catch (Exception e) {
+			entityManager.getTransaction().rollback();
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+		
 	}
 	
 	

@@ -27,10 +27,10 @@ public class MyTest {
 			System.out.println("++++++++++++ INIZIO BATTERIA DI TEST +++++++++++++++");
 
 //			testInserisciNuovoOrdine(ordineServiceInstance);
-//			System.out.println("in tabella Ordine sono presenti " +ordineServiceInstance.listAll().size()+ " elementi.");
+//			System.out.println("in tabella Ordine sono presenti " +ordineServiceInstance.listAllOrdini().size()+ " elementi.");
 
 //			testAggiornaOrdine(ordineServiceInstance);
-//			System.out.println("in tabella Ordine sono presenti " +ordineServiceInstance.listAll().size()+ " elementi.");
+//			System.out.println("in tabella Ordine sono presenti " +ordineServiceInstance.listAllOrdini().size()+ " elementi.");
 
 //			testInserisciNuovoArticolo(articoloServiceInstance, ordineServiceInstance);
 //			System.out.println("in tabella Articolo sono presenti "+articoloServiceInstance.listAll().size() +" elementi.");
@@ -83,6 +83,9 @@ public class MyTest {
 
 //			testListaArticoliConErroriInOrdine(articoloServiceInstance,ordineServiceInstance,categoriaServiceInstance);
 //			System.out.println(	"in tabella Articolo sono presenti " + articoloServiceInstance.listAll().size() + " elementi.");
+
+//			testRimuoviOrdine(ordineServiceInstance, articoloServiceInstance);
+//			System.out.println("in tabella Ordine sono presenti " +ordineServiceInstance.listAllOrdini().size()+ " elementi.");
 
 			
 			
@@ -380,7 +383,7 @@ public class MyTest {
 		}
 
 		// rimozione completa categoria
-		categoriaServiceInstance.RimuoviCategoriaEScollegaArticoli(categoriaReloaded.getId());
+		categoriaServiceInstance.rimuoviCategoriaEScollegaArticoli(categoriaReloaded.getId());
 
 		System.out.println("..........testRimuoviCategoriaEScollegaArticoli fine.......");
 	
@@ -619,6 +622,39 @@ public class MyTest {
 		}
 		System.out.println(listaArticoliConErrori);
 		System.out.println("........testListaCodiciCategorieDiUnMese fine........");
+
+	}
+	
+	
+	//
+	private static void testRimuoviOrdine(OrdineService ordineServiceInstance, ArticoloService articoloServiceInstance)
+			throws Exception {
+		System.out.println("................testRimuoviOrdine inizio............");
+
+		Ordine ordineDaEliminare = new Ordine("Giuseppe Peppe", "Via Firenze 52", LocalDate.of(2022, 5, 20),
+				LocalDate.of(2022, 05, 15));
+		ordineServiceInstance.inserisciNuovo(ordineDaEliminare);
+		Long idOrdineDaInserire = ordineDaEliminare.getId();
+		if (idOrdineDaInserire == null) {
+			throw new RuntimeException("errore: Ordine non inserito.");
+		}
+		Articolo nuovoArticolo = new Articolo("tostapane", "46363", 70, LocalDate.now());
+		nuovoArticolo.setOrdine(ordineDaEliminare);
+		articoloServiceInstance.inserisciNuovo(nuovoArticolo);
+		if (nuovoArticolo.getId() == null) {
+			throw new RuntimeException("errore: Articolo non inserito");
+		}
+		if (!nuovoArticolo.getOrdine().getId().equals(idOrdineDaInserire)) {
+			throw new RuntimeException("errore: l'id dell'ordine non corrisponde");
+		}
+		Long idOrdineDaEliminare = ordineDaEliminare.getId();
+		if (idOrdineDaEliminare == null) {
+			throw new RuntimeException("errore: Ordine non inserito.");
+		}
+
+		ordineServiceInstance.rimuoviOrdine(idOrdineDaEliminare);
+
+		System.out.println("........testRimuoviOrdine fine......");
 
 	}
 }

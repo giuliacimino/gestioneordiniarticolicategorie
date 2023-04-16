@@ -68,7 +68,7 @@ public class CategoriaDAOImpl implements CategoriaDAO {
 	}
 
 	@Override
-	public void DeleteCategoriaEScollegaArticoli(Long idCategoria) throws Exception {
+	public void deleteCategoriaEScollegaArticoli(Long idCategoria) throws Exception {
 		entityManager.createNativeQuery("delete from articolo_categoria a where a.categoria_id = ?1")
 				.setParameter(1, idCategoria).executeUpdate();
 		entityManager.createNativeQuery("delete from Categoria c where c.id = ?1").setParameter(1, idCategoria)
@@ -77,7 +77,7 @@ public class CategoriaDAOImpl implements CategoriaDAO {
 	}
 
 	@Override
-	public List<Categoria> FindAllCategorieByArticoliInAOrdine(Long idOrdine) throws Exception {
+	public List<Categoria> findAllCategorieByArticoliInAOrdine(Long idOrdine) throws Exception {
 		TypedQuery<Categoria> query = entityManager.createQuery(
 				"select distinct c FROM Categoria c join c.articoli a join  a.ordine o where o.id = ?1",
 				Categoria.class);

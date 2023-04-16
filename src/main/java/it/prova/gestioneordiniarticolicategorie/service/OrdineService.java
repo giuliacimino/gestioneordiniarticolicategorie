@@ -23,6 +23,8 @@ public interface OrdineService {
 	
 	public List<String> cercaIndirizziConStringaInNumeroSerialeArticolo (String numeroSeriale) throws Exception;
 	
+	public void rimuoviOrdine(Long idOrdine) throws Exception;
+
 	
 	
 	//per injection

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import it.prova.gestioneordiniarticolicategorie.model.Articolo;
 import it.prova.gestioneordiniarticolicategorie.model.Ordine;
 
 public class OrdineDAOImpl implements OrdineDAO{
@@ -53,8 +54,11 @@ public class OrdineDAOImpl implements OrdineDAO{
 
 
 	@Override
-	public void delete(Ordine o) throws Exception {
-		// TODO Auto-generated method stub
+	public void delete(Ordine input) throws Exception {
+		if (input == null) {
+			throw new Exception("Problema valore in input");
+		}
+		entityManager.remove(entityManager.merge(input));
 		
 	}
 
@@ -83,6 +87,9 @@ public class OrdineDAOImpl implements OrdineDAO{
 				String.class).setParameter(1, '%'+ numeroSeriale + '%');
 		return query.getResultList();
 	}
+
+
+
 	
 
 

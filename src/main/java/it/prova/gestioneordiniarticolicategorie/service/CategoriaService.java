@@ -24,7 +24,7 @@ public interface CategoriaService {
 	
 	public Categoria caricaElementoSingoloConArticoli (Long id) throws Exception;
 	
-	public void RimuoviCategoriaEScollegaArticoli (Long idCategoria) throws Exception;
+	public void rimuoviCategoriaEScollegaArticoli (Long idCategoria) throws Exception;
 
 	public List<Categoria> cercaCategorieArticoliInUnOrdine (Long idOrdine) throws Exception;
 
