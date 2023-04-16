@@ -81,8 +81,8 @@ public class MyTest {
 //			testCercaIndirizziConStringaInNumeroSerialeArticolo(ordineServiceInstance, articoloServiceInstance);
 //			System.out.println("in tabella Ordine sono presenti " +ordineServiceInstance.listAllOrdini().size()+ " elementi.");
 
-			testListaArticoliConErroriInOrdine(articoloServiceInstance,ordineServiceInstance,categoriaServiceInstance);
-			System.out.println(	"in tabella Articolo sono presenti " + articoloServiceInstance.listAll().size() + " elementi.");
+//			testListaArticoliConErroriInOrdine(articoloServiceInstance,ordineServiceInstance,categoriaServiceInstance);
+//			System.out.println(	"in tabella Articolo sono presenti " + articoloServiceInstance.listAll().size() + " elementi.");
 
 			
 			
@@ -353,8 +353,8 @@ public class MyTest {
 		if (nuovaCategoria.getId() == null) {
 			throw new RuntimeException("testRimozioneCompletaCategoria FALLITO: categoria non inserita.");
 		}
-		Ordine nuovoOrdine = new Ordine("francesco crispi", "Via appia 2", LocalDate.of(2023, 5, 31),
-				LocalDate.of(2023, 8, 30));
+		Ordine nuovoOrdine = new Ordine("giancarlo carli", "Via nuoro 1", LocalDate.of(2023, 4, 31),
+				LocalDate.of(2023, 4, 05));
 		ordineServiceInstance.inserisciNuovo(nuovoOrdine);
 		if (nuovoOrdine.getId() == null) {
 			throw new RuntimeException("testRimozioneCompletaCategoria FALLITO: Ordine non inserito.");
@@ -466,6 +466,9 @@ public class MyTest {
 		}
 		Long idCategoriaScelta= listaCategorie.get(0).getId();
 		List<Ordine> ordiniPerCategoria= ordineServiceInstance.cercaPerCategoria(idCategoriaScelta);
+		if (ordiniPerCategoria.size()<1) {
+			throw new RuntimeException("errore: non sono presenti ordin per la categoria scelta.");
+		}
 		System.out.println(ordiniPerCategoria);
 		System.out.println("........testCercaPerCategoria fine........");
 
@@ -484,7 +487,13 @@ public class MyTest {
 			throw new RuntimeException("errore: non sono presenti ordini sul db.");
 		}
 		Long idOrdineScelto= listaOrdini.get(0).getId();
+		if (idOrdineScelto==null) {
+			throw new RuntimeException("errore: non è presente l'ordine scelto.");
+		}
 		List<Categoria> categorieInOrdineScelto= categoriaServiceInstance.cercaCategorieArticoliInUnOrdine(idOrdineScelto);
+		if (categorieInOrdineScelto.size()<1) {
+			throw new RuntimeException("errore: l'ordine scelto non è collegato a categorie.");
+		}
 		System.out.println(categorieInOrdineScelto);
 		System.out.println("........testCercaCategorieArticoliInUnOrdine fine........");
 
@@ -503,7 +512,10 @@ public class MyTest {
 			throw new RuntimeException("errore: non sono presenti articoli sul db.");
 		}
 		
-		Long idCategoriaScelta= listaCategorie.get(0).getId();
+		Long idCategoriaScelta= categoriaServiceInstance.cercaPerDescrizione("casa").getId();
+		if (idCategoriaScelta==null) {
+			throw new RuntimeException("errore: non è presente la categoria scelta.");
+		}
 		Long sommaPrezziArticoliInCategoriaScelta= articoloServiceInstance.sommaPrezzoSingoloArticoliInUnaCategoria(idCategoriaScelta);
 		System.out.println(sommaPrezziArticoliInCategoriaScelta);
 		System.out.println("........testSommaPrezzoSingoloArticoliInUnaCategoria fine........");
@@ -522,6 +534,9 @@ public class MyTest {
 			throw new RuntimeException("errore: non sono presenti ordini sul db.");
 		}
 		List<String> listaCodiciCategorieInUnMese= categoriaServiceInstance.listaCodiciCategorieDiUnMese(2023, 04);
+		if (listaCodiciCategorieInUnMese.size()<1) {
+			throw new RuntimeException("errore: non sono presenti ordini in dato mese.");
+		}
 		System.out.println(listaCodiciCategorieInUnMese);
 		System.out.println("........testListaCodiciCategorieDiUnMese fine........");
 
@@ -538,8 +553,11 @@ public class MyTest {
 		if (listaArticoli.size()<1) {
 			throw new RuntimeException("errore: non sono presenti articoli sul db.");
 		}
-		String DestinatarioScelto= listaOrdini.get(0).getNomeDestinatario();
-		Long sommaPrezzoArticoliDestinatarioScelto= articoloServiceInstance.sommaPrezzoArticoliPerUnDestinatario(DestinatarioScelto);
+		String destinatarioScelto= listaOrdini.get(0).getNomeDestinatario();
+		if (destinatarioScelto == null) {
+			throw new RuntimeException("errore: non è presente il destinatario scelto.");
+		}
+		Long sommaPrezzoArticoliDestinatarioScelto= articoloServiceInstance.sommaPrezzoArticoliPerUnDestinatario(destinatarioScelto);
 		System.out.println(sommaPrezzoArticoliDestinatarioScelto);
 		System.out.println("........testListaCodiciCategorieDiUnMese inizio........");
 	}
@@ -557,6 +575,9 @@ public class MyTest {
 		}
 		String numeroSerialeScelto= "2";
 		List<String> listaIndirizziConCodiceSerialeScelto= ordineServiceInstance.cercaIndirizziConStringaInNumeroSerialeArticolo(numeroSerialeScelto);
+		if (listaIndirizziConCodiceSerialeScelto.size()<1) {
+			throw new RuntimeException("errore: non sono presenti indirizzi con codice seriale scelto.");
+		}
 		System.out.println(listaIndirizziConCodiceSerialeScelto);
 		System.out.println("........testListaCodiciCategorieDiUnMese fine........");
 
