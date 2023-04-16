@@ -28,6 +28,9 @@ public interface ArticoloService {
 	
 	public void RimuoviArticoloEScollegaCategorie (Long idArticolo) throws Exception;
 
+	public Long SommaPrezzoSingoloArticoliInUnaCategoria (Long idCatrgoria) throws Exception;
+
+	public Long SommaPrezzoArticoliPerUnDestinatario (Long idOrdine) throws Exception;
 
 
 	

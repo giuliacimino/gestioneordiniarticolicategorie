@@ -66,10 +66,18 @@ public class MyTest {
 //			testCercaPerCategoria(categoriaServiceInstance, ordineServiceInstance, articoloServiceInstance);
 //			System.out.println("in tabella Ordine sono presenti " +ordineServiceInstance.listAllOrdini().size()+ " elementi.");
 
-			testCercaCategorieArticoliInUnOrdine(categoriaServiceInstance, ordineServiceInstance);
-			System.out.println("in tabella Categoria sono presenti "+ categoriaServiceInstance.listAllCategorie().size()+ " elementi.");
-
+//			testCercaCategorieArticoliInUnOrdine(categoriaServiceInstance, ordineServiceInstance);
+//			System.out.println("in tabella Categoria sono presenti "+ categoriaServiceInstance.listAllCategorie().size()+ " elementi.");
 			
+//			testSommaPrezzoSingoloArticoliInUnaCategoria(articoloServiceInstance, categoriaServiceInstance);
+//			System.out.println(	"in tabella Articolo sono presenti " + articoloServiceInstance.listAll().size() + " elementi.");
+			
+//			testListaCodiciCategorieDiUnMese(categoriaServiceInstance, ordineServiceInstance);
+//			System.out.println("in tabella Categoria sono presenti "+ categoriaServiceInstance.listAllCategorie().size()+ " elementi.");
+
+			testSommaPrezzoArticoliPerUnDestinatario(articoloServiceInstance, ordineServiceInstance);
+			System.out.println(	"in tabella Articolo sono presenti " + articoloServiceInstance.listAll().size() + " elementi.");
+
 		} catch (Throwable e) {
 			e.printStackTrace();
 		} finally {
@@ -371,18 +379,6 @@ public class MyTest {
 	}	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	//
 	private static void testOrdinePiuRecentePerCategoria(OrdineService ordineServiceInstance,
 			ArticoloService articoloServiceInstance, CategoriaService categoriaServiceInstance) throws Exception {
@@ -485,5 +481,58 @@ public class MyTest {
 		System.out.println("........testCercaCategorieArticoliInUnOrdine fine........");
 
 
+	}
+	
+	//
+	private static void testSommaPrezzoSingoloArticoliInUnaCategoria (ArticoloService articoloServiceInstance, CategoriaService categoriaServiceInstance) throws Exception{
+		System.out.println("........testSommaPrezzoSingoloArticoliInUnaCategoria inizio........");
+		List<Categoria> listaCategorie= categoriaServiceInstance.listAllCategorie();
+		if (listaCategorie.size()<1) {
+			throw new RuntimeException("errore: non sono presenti categorie sul db.");
+		}
+		List<Articolo> listaArticoli= articoloServiceInstance.listAll();
+		if (listaArticoli.size()<1) {
+			throw new RuntimeException("errore: non sono presenti articoli sul db.");
+		}
+		
+		Long idCategoriaScelta= listaCategorie.get(0).getId();
+		Long sommaPrezziArticoliInCategoriaScelta= articoloServiceInstance.SommaPrezzoSingoloArticoliInUnaCategoria(idCategoriaScelta);
+		System.out.println(sommaPrezziArticoliInCategoriaScelta);
+		System.out.println("........testSommaPrezzoSingoloArticoliInUnaCategoria fine........");
+
+	}
+	
+	//
+	private static void testListaCodiciCategorieDiUnMese (CategoriaService categoriaServiceInstance, OrdineService ordineServiceInstance) throws Exception{
+		System.out.println("........testListaCodiciCategorieDiUnMese inizio........");
+		List<Categoria> listaCategorie= categoriaServiceInstance.listAllCategorie();
+		if (listaCategorie.size()<1) {
+			throw new RuntimeException("errore: non sono presenti categorie sul db.");
+		}
+		List<Ordine> listaOrdini = ordineServiceInstance.listAllOrdini();
+		if (listaOrdini.size()<1) {
+			throw new RuntimeException("errore: non sono presenti ordini sul db.");
+		}
+		List<String> listaCodiciCategorieInUnMese= categoriaServiceInstance.listaCodiciCategorieDiUnMese(2023, 04);
+		System.out.println(listaCodiciCategorieInUnMese);
+		System.out.println("........testListaCodiciCategorieDiUnMese fine........");
+
+	}
+	
+	//
+	private static void testSommaPrezzoArticoliPerUnDestinatario (ArticoloService articoloServiceInstance, OrdineService ordineServiceInstance) throws Exception{
+		System.out.println("........testListaCodiciCategorieDiUnMese inizio........");
+		List<Ordine> listaOrdini = ordineServiceInstance.listAllOrdini();
+		if (listaOrdini.size()<1) {
+			throw new RuntimeException("errore: non sono presenti ordini sul db.");
+		}
+		List<Articolo> listaArticoli= articoloServiceInstance.listAll();
+		if (listaArticoli.size()<1) {
+			throw new RuntimeException("errore: non sono presenti articoli sul db.");
+		}
+		Long idOrdineDestinatarioScelto= listaOrdini.get(0).getId();
+		Long sommaPrezzoArticoliDestinatarioScelto= articoloServiceInstance.SommaPrezzoArticoliPerUnDestinatario(idOrdineDestinatarioScelto);
+		System.out.println(sommaPrezzoArticoliDestinatarioScelto);
+		System.out.println("........testListaCodiciCategorieDiUnMese inizio........");
 	}
 }

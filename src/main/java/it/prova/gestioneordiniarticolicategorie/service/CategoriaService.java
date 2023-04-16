@@ -28,6 +28,9 @@ public interface CategoriaService {
 
 	public List<Categoria> cercaCategorieArticoliInUnOrdine (Long idOrdine) throws Exception;
 
+	public List<String> listaCodiciCategorieDiUnMese (int anno, int mese) throws Exception;
+	
+	
 	// per injection
 		public void setCategoriaDAO (CategoriaDAO categoriaDAO);
 
