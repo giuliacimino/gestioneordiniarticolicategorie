@@ -137,6 +137,11 @@ public class Articolo {
 	public void setCategorie(Set<Categoria> categorie) {
 		this.categorie = categorie;
 	}
+	
+	public void addToCategorie (Categoria categoriaInstance) {
+		this.categorie.add(categoriaInstance);
+		categoriaInstance.getArticoli().add(this);
+	}
 
 	@Override
 	public String toString() {

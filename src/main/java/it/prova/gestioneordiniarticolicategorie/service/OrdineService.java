@@ -21,7 +21,7 @@ public interface OrdineService {
 	
 	public List<Ordine> cercaPerCategoria (Long idCategoria) throws Exception;
 	
-
+	public List<String> cercaIndirizziConStringaInNumeroSerialeArticolo (String numeroSeriale) throws Exception;
 	
 	
 	

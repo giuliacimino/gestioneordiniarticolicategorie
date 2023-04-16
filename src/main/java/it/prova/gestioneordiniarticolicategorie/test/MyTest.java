@@ -75,9 +75,17 @@ public class MyTest {
 //			testListaCodiciCategorieDiUnMese(categoriaServiceInstance, ordineServiceInstance);
 //			System.out.println("in tabella Categoria sono presenti "+ categoriaServiceInstance.listAllCategorie().size()+ " elementi.");
 
-			testSommaPrezzoArticoliPerUnDestinatario(articoloServiceInstance, ordineServiceInstance);
+//			testSommaPrezzoArticoliPerUnDestinatario(articoloServiceInstance, ordineServiceInstance);
+//			System.out.println(	"in tabella Articolo sono presenti " + articoloServiceInstance.listAll().size() + " elementi.");
+
+//			testCercaIndirizziConStringaInNumeroSerialeArticolo(ordineServiceInstance, articoloServiceInstance);
+//			System.out.println("in tabella Ordine sono presenti " +ordineServiceInstance.listAllOrdini().size()+ " elementi.");
+
+			testListaArticoliConErroriInOrdine(articoloServiceInstance,ordineServiceInstance,categoriaServiceInstance);
 			System.out.println(	"in tabella Articolo sono presenti " + articoloServiceInstance.listAll().size() + " elementi.");
 
+			
+			
 		} catch (Throwable e) {
 			e.printStackTrace();
 		} finally {
@@ -332,7 +340,7 @@ public class MyTest {
 			throw new RuntimeException("errore: categoria non associata ad articolo");
 		}
 		// rimozione completa articolo
-		articoloServiceInstance.RimuoviArticoloEScollegaCategorie(articoloDaRimuovere.getId());
+		articoloServiceInstance.rimuoviArticoloEScollegaCategorie(articoloDaRimuovere.getId());
 
 		System.out.println("........testRimuoviArticoloEScollegaCategorie fine.......");
 	}
@@ -496,7 +504,7 @@ public class MyTest {
 		}
 		
 		Long idCategoriaScelta= listaCategorie.get(0).getId();
-		Long sommaPrezziArticoliInCategoriaScelta= articoloServiceInstance.SommaPrezzoSingoloArticoliInUnaCategoria(idCategoriaScelta);
+		Long sommaPrezziArticoliInCategoriaScelta= articoloServiceInstance.sommaPrezzoSingoloArticoliInUnaCategoria(idCategoriaScelta);
 		System.out.println(sommaPrezziArticoliInCategoriaScelta);
 		System.out.println("........testSommaPrezzoSingoloArticoliInUnaCategoria fine........");
 
@@ -530,9 +538,66 @@ public class MyTest {
 		if (listaArticoli.size()<1) {
 			throw new RuntimeException("errore: non sono presenti articoli sul db.");
 		}
-		Long idOrdineDestinatarioScelto= listaOrdini.get(0).getId();
-		Long sommaPrezzoArticoliDestinatarioScelto= articoloServiceInstance.SommaPrezzoArticoliPerUnDestinatario(idOrdineDestinatarioScelto);
+		String DestinatarioScelto= listaOrdini.get(0).getNomeDestinatario();
+		Long sommaPrezzoArticoliDestinatarioScelto= articoloServiceInstance.sommaPrezzoArticoliPerUnDestinatario(DestinatarioScelto);
 		System.out.println(sommaPrezzoArticoliDestinatarioScelto);
 		System.out.println("........testListaCodiciCategorieDiUnMese inizio........");
+	}
+	
+	//
+	private static void testCercaIndirizziConStringaInNumeroSerialeArticolo (OrdineService ordineServiceInstance, ArticoloService articoloServiceInstance) throws Exception{
+		System.out.println("........testListaCodiciCategorieDiUnMese inizio........");
+		List<Ordine> listaOrdini = ordineServiceInstance.listAllOrdini();
+		if (listaOrdini.size()<1) {
+			throw new RuntimeException("errore: non sono presenti ordini sul db.");
+		}
+		List<Articolo> listaArticoli= articoloServiceInstance.listAll();
+		if (listaArticoli.size()<1) {
+			throw new RuntimeException("errore: non sono presenti articoli sul db.");
+		}
+		String numeroSerialeScelto= "2";
+		List<String> listaIndirizziConCodiceSerialeScelto= ordineServiceInstance.cercaIndirizziConStringaInNumeroSerialeArticolo(numeroSerialeScelto);
+		System.out.println(listaIndirizziConCodiceSerialeScelto);
+		System.out.println("........testListaCodiciCategorieDiUnMese fine........");
+
+	}
+	
+	//
+	private static void testListaArticoliConErroriInOrdine (ArticoloService articoloServiceInstance, OrdineService ordineServiceInstance, CategoriaService categoriaServiceInstance) throws Exception{
+		System.out.println("........testListaCodiciCategorieDiUnMese inizio........");
+		List<Articolo> listaArticoli= articoloServiceInstance.listAll();
+		if (listaArticoli.size()<1) {
+			throw new RuntimeException("errore: non sono presenti articoli sul db.");
+		}
+
+		Ordine nuovoOrdine= new Ordine("alessandro magno", "via grecia 2", LocalDate.of(2022, 8, 30), LocalDate.of(2022, 8, 31));
+		ordineServiceInstance.inserisciNuovo(nuovoOrdine);
+		if (nuovoOrdine.getId()==null) {
+			throw new RuntimeException("errore: ordine non inserito.");
+		}
+		Articolo nuovoArticoloConErrore= new Articolo("mestolo", "56463", 30, LocalDate.now());
+		nuovoArticoloConErrore.setOrdine(nuovoOrdine);
+		articoloServiceInstance.inserisciNuovo(nuovoArticoloConErrore);
+		if (nuovoArticoloConErrore.getId()==null) {
+			throw new RuntimeException("errore: articolo non inserito.");
+		}
+		Categoria nuovaCategoria= new Categoria("cucina", "CUC");
+		categoriaServiceInstance.inserisciNuovo(nuovaCategoria);
+		if (nuovaCategoria.getId()==null) {
+			throw new RuntimeException("errore: categoria non inserita.");
+		}
+		articoloServiceInstance.aggiungiCategoriaAArticoloEsistente(nuovoArticoloConErrore, nuovaCategoria);
+		Articolo articoloRicaricato= articoloServiceInstance.caricaElementoSingoloConCategorie(nuovoArticoloConErrore.getId());
+		if (articoloRicaricato.getCategorie().isEmpty()) {
+			throw new RuntimeException("errore: non ci sono categorie associate all'articolo.");
+		}
+		
+		List<Articolo> listaArticoliConErrori =articoloServiceInstance.listaArticoliConErroriInOrdine();
+		if (listaArticoliConErrori.size()<1) {
+			throw new RuntimeException("non sono stati trovati articoli con errori.");
+		}
+		System.out.println(listaArticoliConErrori);
+		System.out.println("........testListaCodiciCategorieDiUnMese fine........");
+
 	}
 }

@@ -74,6 +74,15 @@ public class OrdineDAOImpl implements OrdineDAO{
 				"select o from Ordine o join o.articoli a join a.categorie c where c.id = ?1", Ordine.class).setParameter(1, idCategoria);
 		return query.getResultList();
 	}
+
+
+	@Override
+	public List<String> findIndirizziWithStringaInNumeroSerialeArticolo(String numeroSeriale) throws Exception {
+		TypedQuery<String> query = entityManager.createQuery(
+				"select distinct o.indirizzoSpedizione from Ordine o join o.articoli a where a.numeroSeriale like ?1",
+				String.class).setParameter(1, '%'+ numeroSeriale + '%');
+		return query.getResultList();
+	}
 	
 
 

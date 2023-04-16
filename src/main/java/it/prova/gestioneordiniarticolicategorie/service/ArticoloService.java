@@ -20,19 +20,19 @@ public interface ArticoloService {
 	
 	public void rimuovi(Long idArticolo) throws Exception;
 	
-	public Articolo caricaElementoSingoloConCategorie(Long id) throws Exception;
+	public Articolo caricaElementoSingoloConCategorie(Long idArticolo) throws Exception;
 	
 	public void aggiungiCategoriaAArticoloEsistente(Articolo articoloEsistente, Categoria categoriaInstance) throws Exception;
 	
 	public void rimuoviCategoriaDaArticolo(Long idArticolo, Long idCategoria) throws Exception;
 	
-	public void RimuoviArticoloEScollegaCategorie (Long idArticolo) throws Exception;
+	public void rimuoviArticoloEScollegaCategorie (Long idArticolo) throws Exception;
 
-	public Long SommaPrezzoSingoloArticoliInUnaCategoria (Long idCatrgoria) throws Exception;
+	public Long sommaPrezzoSingoloArticoliInUnaCategoria (Long idCatrgoria) throws Exception;
 
-	public Long SommaPrezzoArticoliPerUnDestinatario (Long idOrdine) throws Exception;
+	public Long sommaPrezzoArticoliPerUnDestinatario (String nomeDestinarario) throws Exception;
 
-
+	public List<Articolo> listaArticoliConErroriInOrdine () throws Exception;
 	
 	
 	//per injection

@@ -147,15 +147,14 @@ public class ArticoloServiceImpl implements ArticoloService {
 
 
 	@Override
-	public Articolo caricaElementoSingoloConCategorie(Long id) throws Exception {
+	public Articolo caricaElementoSingoloConCategorie(Long idArticolo) throws Exception {
 		EntityManager entityManager = EntityManagerUtil.getEntityManager();
-
 		try {
-			// uso l'injection per il dao
+
+			// injection
 			articoloDAO.setEntityManager(entityManager);
 
-			// eseguo quello che realmente devo fare
-			return articoloDAO.findByIdFetchingCategorie(id);
+			return articoloDAO.findByIdFetchingCategorie(idArticolo);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -170,18 +169,19 @@ public class ArticoloServiceImpl implements ArticoloService {
 	public void aggiungiCategoriaAArticoloEsistente(Articolo articoloEsistente, Categoria categoriaInstance)
 			throws Exception {
 		EntityManager entityManager = EntityManagerUtil.getEntityManager();
-
 		try {
+
 			entityManager.getTransaction().begin();
-
-			// uso l'injection per il dao
+			
+			// injection
 			articoloDAO.setEntityManager(entityManager);
-
+			
 			articoloEsistente = entityManager.merge(articoloEsistente);
+
 			categoriaInstance = entityManager.merge(categoriaInstance);
-
-			articoloEsistente.getCategorie().add(categoriaInstance);
-
+			
+			articoloEsistente.addToCategorie(categoriaInstance);
+			
 			entityManager.getTransaction().commit();
 		} catch (Exception e) {
 			entityManager.getTransaction().rollback();
@@ -189,8 +189,7 @@ public class ArticoloServiceImpl implements ArticoloService {
 			throw e;
 		} finally {
 			EntityManagerUtil.closeEntityManager(entityManager);
-		}
-		
+		}	
 	}
 
 
@@ -223,7 +222,7 @@ public class ArticoloServiceImpl implements ArticoloService {
 	}
 
 	@Override
-	public void RimuoviArticoloEScollegaCategorie(Long idArticolo) throws Exception {
+	public void rimuoviArticoloEScollegaCategorie(Long idArticolo) throws Exception {
 		EntityManager entityManager = EntityManagerUtil.getEntityManager();
 		try {
 
@@ -247,7 +246,7 @@ public class ArticoloServiceImpl implements ArticoloService {
 	}
 
 	@Override
-	public Long SommaPrezzoSingoloArticoliInUnaCategoria(Long idCategoria) throws Exception {
+	public Long sommaPrezzoSingoloArticoliInUnaCategoria(Long idCategoria) throws Exception {
 		EntityManager entityManager = EntityManagerUtil.getEntityManager();
 		try {
 			// injection
@@ -264,14 +263,32 @@ public class ArticoloServiceImpl implements ArticoloService {
 	}
 
 	@Override
-	public Long SommaPrezzoArticoliPerUnDestinatario(Long idOrdine) throws Exception {
+	public Long sommaPrezzoArticoliPerUnDestinatario(String nomeDestinatario) throws Exception {
 		EntityManager entityManager = EntityManagerUtil.getEntityManager();
 		try {
 			// injection
 			articoloDAO.setEntityManager(entityManager);
 
 			// esecuzione metodo
-			return articoloDAO.sumPrezzoArticoliForDestinatario(idOrdine);
+			return articoloDAO.sumPrezzoArticoliForDestinatario(nomeDestinatario);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+	}
+
+	@Override
+	public List<Articolo> listaArticoliConErroriInOrdine() throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+
+			// injection
+			articoloDAO.setEntityManager(entityManager);
+
+			return articoloDAO.listArticoliWithErroriInOrdine();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

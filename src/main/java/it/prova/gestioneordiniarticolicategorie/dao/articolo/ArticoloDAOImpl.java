@@ -64,10 +64,11 @@ private EntityManager entityManager;
 
 
 	@Override
-	public Articolo findByIdFetchingCategorie(Long id) throws Exception {
-		TypedQuery<Articolo> query = entityManager.createQuery("select a FROM Articolo a join fetch a.categorie c where a.id = ?1", Articolo.class);
-		query.setParameter(1, id);
-		return query.getResultList().stream().findFirst().orElse(null);
+	public Articolo findByIdFetchingCategorie(Long idArticolo) throws Exception {
+		TypedQuery<Articolo> query = entityManager
+				.createQuery("from Articolo a join fetch a.categorie c where a.id = ?1", Articolo.class);
+		query.setParameter(1, idArticolo);
+		return query.getResultStream().findFirst().orElse(null);
 	}
 
 
@@ -92,12 +93,19 @@ private EntityManager entityManager;
 
 
 	@Override
-	public Long sumPrezzoArticoliForDestinatario(Long idOrdine) throws Exception {
+	public Long sumPrezzoArticoliForDestinatario(String nomeDestinatario) throws Exception {
 		Long somma = null;
-		Query query = entityManager.createQuery("select sum(a.prezzoSingolo) from Articolo a join a.ordine o where o.id=?1");
-		query.setParameter(1, idOrdine);
+		Query query = entityManager.createQuery("select sum(a.prezzoSingolo) from Articolo a join a.ordine o where o.nomeDestinatario like ?1");
+		query.setParameter(1, nomeDestinatario);
 		somma = (Long) query.getSingleResult();
 		return somma;
+	}
+
+
+	@Override
+	public List<Articolo> listArticoliWithErroriInOrdine() throws Exception {
+		TypedQuery<Articolo> query = entityManager.createQuery("select a FROM Articolo a join fetch a.ordine o where o.dataSpedizione > o.dataScadenza", Articolo.class);
+		return query.getResultList();
 	}
 
 }
