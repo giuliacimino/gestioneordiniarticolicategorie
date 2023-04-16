@@ -82,6 +82,14 @@ entityManager.createNativeQuery("delete from Categoria c where c.id = ?1").setPa
 		.executeUpdate();
 
 	}
+
+
+	@Override
+	public List<Categoria> FindAllCategorieByArticoliInAOrdine(Long idOrdine) throws Exception {
+		TypedQuery<Categoria> query = entityManager.createQuery("select distinct c FROM Categoria c join c.articoli a join  a.ordine o where o.id = ?1", Categoria.class);
+		query.setParameter(1, idOrdine);
+		return query.getResultList();
+	}
 	
 	
 

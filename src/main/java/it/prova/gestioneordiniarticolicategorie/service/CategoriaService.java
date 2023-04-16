@@ -26,7 +26,7 @@ public interface CategoriaService {
 	
 	public void RimuoviCategoriaEScollegaArticoli (Long idCategoria) throws Exception;
 
-
+	public List<Categoria> cercaCategorieArticoliInUnOrdine (Long idOrdine) throws Exception;
 
 	// per injection
 		public void setCategoriaDAO (CategoriaDAO categoriaDAO);

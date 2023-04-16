@@ -194,4 +194,22 @@ public class CategoriaServiceImpl implements CategoriaService {
 		
 	}
 
+	@Override
+	public List<Categoria> cercaCategorieArticoliInUnOrdine(Long idOrdine) throws Exception {
+		EntityManager entityManager = EntityManagerUtil.getEntityManager();
+		try {
+
+			// injection
+			categoriaDAO.setEntityManager(entityManager);
+
+			return categoriaDAO.FindAllCategorieByArticoliInAOrdine(idOrdine);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			EntityManagerUtil.closeEntityManager(entityManager);
+		}
+	}
+
 }

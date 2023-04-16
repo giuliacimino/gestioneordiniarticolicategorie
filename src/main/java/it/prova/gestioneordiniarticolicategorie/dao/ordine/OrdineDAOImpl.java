@@ -66,6 +66,14 @@ public class OrdineDAOImpl implements OrdineDAO{
 				Ordine.class).setParameter(1, idCategoria);
 		return query.getResultStream().findFirst().orElse(null);
 	}
+
+
+	@Override
+	public List<Ordine> findAllByCategoria(Long idCategoria) throws Exception {
+		TypedQuery<Ordine> query = entityManager.createQuery(
+				"select o from Ordine o join o.articoli a join a.categorie c where c.id = ?1", Ordine.class).setParameter(1, idCategoria);
+		return query.getResultList();
+	}
 	
 
 

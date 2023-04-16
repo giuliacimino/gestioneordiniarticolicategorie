@@ -60,11 +60,15 @@ public class MyTest {
 //			testRimuoviCategoriaEScollegaArticoli(categoriaServiceInstance, articoloServiceInstance, ordineServiceInstance);
 //			System.out.println("in tabella Categoria sono presenti "+ categoriaServiceInstance.listAllCategorie().size()+ " elementi.");
 
-			testOrdinePiuRecentePerCategoria(ordineServiceInstance, articoloServiceInstance, categoriaServiceInstance);
+//			testOrdinePiuRecentePerCategoria(ordineServiceInstance, articoloServiceInstance, categoriaServiceInstance);
+//			System.out.println("in tabella Categoria sono presenti "+ categoriaServiceInstance.listAllCategorie().size()+ " elementi.");
+
+//			testCercaPerCategoria(categoriaServiceInstance, ordineServiceInstance, articoloServiceInstance);
+//			System.out.println("in tabella Ordine sono presenti " +ordineServiceInstance.listAllOrdini().size()+ " elementi.");
+
+			testCercaCategorieArticoliInUnOrdine(categoriaServiceInstance, ordineServiceInstance);
 			System.out.println("in tabella Categoria sono presenti "+ categoriaServiceInstance.listAllCategorie().size()+ " elementi.");
 
-			
-			
 			
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -442,5 +446,44 @@ public class MyTest {
 		System.out.println(ordinePiuRecente);
 
 		System.out.println("........testOrdinePiuRecentePerCategoria fine........");
+	}
+	
+	
+	//
+	private static void testCercaPerCategoria (CategoriaService categoriaServiceInstance, OrdineService ordineServiceInstance, ArticoloService articoloServiceInstance) throws Exception{
+		System.out.println("........testCercaPerCategoria inizio........");
+		List<Categoria> listaCategorie= categoriaServiceInstance.listAllCategorie();
+		if (listaCategorie.size()<1) {
+			throw new RuntimeException("errore: non sono presenti categorie sul db.");
+		}
+		List<Ordine> listaOrdini = ordineServiceInstance.listAllOrdini();
+		if (listaOrdini.size()<1) {
+			throw new RuntimeException("errore: non sono presenti ordini sul db.");
+		}
+		Long idCategoriaScelta= listaCategorie.get(0).getId();
+		List<Ordine> ordiniPerCategoria= ordineServiceInstance.cercaPerCategoria(idCategoriaScelta);
+		System.out.println(ordiniPerCategoria);
+		System.out.println("........testCercaPerCategoria fine........");
+
+
+	}
+	
+	//
+	private static void testCercaCategorieArticoliInUnOrdine (CategoriaService categoriaServiceInstance, OrdineService ordineServiceInstance) throws Exception{
+		System.out.println("........testCercaCategorieArticoliInUnOrdine inizio........");
+		List<Categoria> listaCategorie= categoriaServiceInstance.listAllCategorie();
+		if (listaCategorie.size()<1) {
+			throw new RuntimeException("errore: non sono presenti categorie sul db.");
+		}
+		List<Ordine> listaOrdini = ordineServiceInstance.listAllOrdini();
+		if (listaOrdini.size()<1) {
+			throw new RuntimeException("errore: non sono presenti ordini sul db.");
+		}
+		Long idOrdineScelto= listaOrdini.get(0).getId();
+		List<Categoria> categorieInOrdineScelto= categoriaServiceInstance.cercaCategorieArticoliInUnOrdine(idOrdineScelto);
+		System.out.println(categorieInOrdineScelto);
+		System.out.println("........testCercaCategorieArticoliInUnOrdine fine........");
+
+
 	}
 }
